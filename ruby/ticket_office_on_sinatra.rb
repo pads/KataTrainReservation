@@ -15,6 +15,8 @@ post '/reserve' do
   booking_service = BookingService.new
   office = TicketOffice.new(train_data_service, booking_service)
   input = URI.decode_www_form(request.body.read)
+  # input[0][1] = train_id
+  # input[1][1] = number of seats
   reservation_request = ReservationRequest.new(input[0][1], input[1][1].to_i)
   reservation = office.make_reservation reservation_request
   respond_with reservation

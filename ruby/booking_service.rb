@@ -1,6 +1,11 @@
+require 'httparty'
+
 class BookingService
+  include HTTParty
+  base_uri 'http://localhost:8082'
+
   def generate_reference
-    # TODO: test and implement
-    '75bcd1b'
+    response = self.class.get('/booking_reference')
+    response.body
   end
 end
