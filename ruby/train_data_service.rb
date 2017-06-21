@@ -8,10 +8,14 @@ class TrainDataService
   base_uri 'http://localhost:8081'
 
   def next_available_seat
-    # TODO: test and implement
-    coach = seat_plan["seats"].values[0]["coach"]
-    seat_number = seat_plan["seats"].values[0]["seat_number"]
-    Seat.new(coach, seat_number)
+    # TODO: test
+    seat_plan["seats"].keys.each do |seat|
+      next unless seat_plan["seats"][seat]["booking_reference"].empty?
+      @coach = seat_plan["seats"][seat]["coach"]
+      @seat_number = seat_plan["seats"][seat]["seat_number"]
+      break
+    end
+    Seat.new(@coach, @seat_number)
   end
 
   def reserve_seats(seats, reference)
@@ -25,7 +29,6 @@ class TrainDataService
         ['booking_reference', reference]
       ])
     })
-    puts response.request.inspect
   end
 
   private
