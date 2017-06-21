@@ -27,9 +27,13 @@ configure do
 end
 
 def respond_with(reservation)
-  {
-    train_id: reservation.train_id,
-    booking_reference: reservation.booking_reference,
-    seats: reservation.seats.map {|seat| "#{seat.number}#{seat.coach}" }
-  }.to_json
+  if reservation
+    {
+      train_id: reservation.train_id,
+      booking_reference: reservation.booking_reference,
+      seats: reservation.seats.map {|seat| "#{seat.number}#{seat.coach}" }
+    }.to_json
+  else
+    { error: 'Reservations full for this train' }
+  end
 end

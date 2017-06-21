@@ -7,8 +7,24 @@ class TrainDataService
   include HTTParty
   base_uri 'http://localhost:8081'
 
+  def initialize(train_capacity = 0.7)
+    @train_capacity = 0.7 # i.e 70%
+  end
+
   def next_available_seat
     # TODO: test
+    total_seats = seat_plan["seats"].size
+    max_seats = (total_seats * @train_capacity).to_i
+    total_booked = seat_plan["seats"].select do |seat|
+      !seat_plan["seats"][seat]["booking_reference"].empty?
+    end.size
+
+    puts "Max seats that can be booked: #{max_seats}"
+    puts "Total booked thus far: #{total_booked}"
+
+    return if total_booked >= max_seats
+    puts "Still under capacity, proceeding with reservation..."
+
     seat_plan["seats"].keys.each do |seat|
       next unless seat_plan["seats"][seat]["booking_reference"].empty?
       @coach = seat_plan["seats"][seat]["coach"]
