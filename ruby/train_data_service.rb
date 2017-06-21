@@ -1,5 +1,6 @@
 require 'httparty'
 require 'json'
+require 'uri'
 require_relative 'reservations.rb'
 
 class TrainDataService
@@ -11,6 +12,20 @@ class TrainDataService
     coach = seat_plan["seats"].values[0]["coach"]
     seat_number = seat_plan["seats"].values[0]["seat_number"]
     Seat.new(coach, seat_number)
+  end
+
+  def reserve_seats(seats, reference)
+    response = self.class.post('/reserve', {
+      headers: {
+        'Content-Type' => 'application/x-www-form-urlencoded'
+      },
+      body: URI.encode_www_form([
+        ['train_id', 'express_2000'],
+        ['seats', seats.map(&:to_s).to_s],
+        ['booking_reference', reference]
+      ])
+    })
+    puts response.request.inspect
   end
 
   private

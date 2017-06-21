@@ -29,4 +29,8 @@ class Seat
     @coach = coach
     @number = number
   end
+
+  def to_s
+    "#{@number}#{@coach}"
+  end
 end

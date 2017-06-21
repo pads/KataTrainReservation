@@ -12,6 +12,8 @@ class TicketOffice
     request.seat_count.times do |index|
       seats << @train_data_service.next_available_seat
     end
-    Reservation.new(@booking_service.generate_reference, request.train_id, seats)
+    reference = @booking_service.generate_reference
+    @train_data_service.reserve_seats(seats, reference)
+    Reservation.new(reference, request.train_id, seats)
   end
 end
