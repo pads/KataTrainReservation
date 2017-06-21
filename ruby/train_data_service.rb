@@ -13,10 +13,11 @@ class TrainDataService
 
   def next_available_seat
     # TODO: test
-    total_seats = seat_plan["seats"].size
+    @current_seat_plan ||= seat_plan["seats"]
+    total_seats = @current_seat_plan.size
     max_seats = (total_seats * @train_capacity).to_i
-    total_booked = seat_plan["seats"].select do |seat|
-      !seat_plan["seats"][seat]["booking_reference"].empty?
+    total_booked = @current_seat_plan.select do |seat|
+      !@current_seat_plan[seat]["booking_reference"].empty?
     end.size
 
     puts "Max seats that can be booked: #{max_seats}"
@@ -25,10 +26,11 @@ class TrainDataService
     return if total_booked >= max_seats
     puts "Still under capacity, proceeding with reservation..."
 
-    seat_plan["seats"].keys.each do |seat|
-      next unless seat_plan["seats"][seat]["booking_reference"].empty?
-      @coach = seat_plan["seats"][seat]["coach"]
-      @seat_number = seat_plan["seats"][seat]["seat_number"]
+    @current_seat_plan.keys.each do |seat|
+      next unless @current_seat_plan[seat]["booking_reference"].empty?
+      @coach = @current_seat_plan[seat]["coach"]
+      @seat_number = @current_seat_plan[seat]["seat_number"]
+      @current_seat_plan[seat]["booking_reference"] = "hold"
       break
     end
     Seat.new(@coach, @seat_number)
