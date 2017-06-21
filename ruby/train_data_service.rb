@@ -26,7 +26,13 @@ class TrainDataService
     return if total_booked >= max_seats
     puts "Still under capacity, proceeding with reservation..."
 
-    @current_seat_plan.keys.each do |seat|
+    sorted_keys = @current_seat_plan.keys.sort do |first, second|
+      first.reverse <=> second.reverse
+    end
+
+    puts sorted_keys
+
+    sorted_keys.each do |seat|
       next unless @current_seat_plan[seat]["booking_reference"].empty?
       @coach = @current_seat_plan[seat]["coach"]
       @seat_number = @current_seat_plan[seat]["seat_number"]
