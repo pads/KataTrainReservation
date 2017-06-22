@@ -10,6 +10,13 @@ require_relative 'ticket_office.rb'
 require_relative 'train_data_service.rb'
 require_relative 'booking_service.rb'
 
+# TODO:
+# don't reserve more than 70% of a carriage (unless you need to keep a booking together on the same coach)
+# don't split booking across coaches
+# remove hard coding of train id
+# test!
+# refactor!
+
 post '/reserve' do
   train_data_service = TrainDataService.new
   booking_service = BookingService.new
